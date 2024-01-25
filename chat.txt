@@ -1,0 +1,13 @@
+import re
+
+def convert_svg_matrix_to_actual_coordinates(transform_string, x, y):
+    # Parse the transform string to get the matrix values
+    matrix_values = list(map(float, re.findall(r"matrix\(([^)]+)\)", transform_string)[0].split(',')))
+
+    # Apply the matrix transformation to the point
+    new_x = float(matrix_values[0])*x + float(matrix_values[2])*y + float(matrix_values[4])
+    new_y = float(matrix_values[1])*x + float(matrix_values[3])*y + float(matrix_values[5])
+
+    return new_x, new_y
+
+print(convert_svg_matrix_to_actual_coordinates("matrix(3.,-0.707107, 0.707107,0.707107,0,0)", 0, 0))
