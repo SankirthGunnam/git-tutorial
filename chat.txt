@@ -11,3 +11,88 @@ def convert_svg_matrix_to_actual_coordinates(transform_string, x, y):
     return new_x, new_y
 
 print(convert_svg_matrix_to_actual_coordinates("matrix(3.,-0.707107, 0.707107,0.707107,0,0)", 0, 0))
+
+
+#####################################################
+
+import xml.etree.ElementTree as ET
+import numpy as np
+
+# Parse the SVG file
+tree = ET.parse('your_file.svg')
+root = tree.getroot()
+
+# Function to apply matrix transformation to a point
+def apply_matrix(matrix, point):
+    x, y = point
+    new_x = matrix[0] * x + matrix[2] * y + matrix[4]
+    new_y = matrix[1] * x + matrix[3] * y + matrix[5]
+    return new_x, new_y
+
+# Function to parse the transform attribute and get the transformation matrix
+def parse_transform(transform):
+    if transform is None:
+        return np.identity(3)
+    else:
+        transform_values = [float(value) for value in transform.split('(')[1].split(')')[0].split(',')]
+        return np.array(transform_values).reshape((3, 2))
+
+# Function to parse path data and apply transformations
+def parse_path(path_element):
+    path_data = path_element.attrib['d']
+    transform = path_element.attrib.get('transform')
+
+    # Parse the transform attribute to get the transformation matrix
+    matrix = parse_transform(transform)
+
+    # Parse path data and apply the transformation
+    path_commands = path_data.split()
+    current_point = (0, 0)
+    transformed_points = []
+
+    i = 0
+    while i < len(path_commands):
+        command = path_commands[i]
+        i += 1
+
+        if command.isalpha():  # Check if the command is a letter (e.g., M, L, etc.)
+            args = [float(value) for value in path_commands[i:i+6]]
+            i += len(args)
+            
+            if command == 'M':
+                current_point = args[0], args[1]
+                transformed_points.append(apply_matrix(matrix, current_point))
+            elif command == 'L':
+                for j in range(0, len(args), 2):
+                    current_point = args[j], args[j + 1]
+                    transformed_points.append(apply_matrix(matrix, current_point))
+            elif command == 'C':
+                # Cubic Bezier Curve
+                for j in range(0, len(args), 6):
+                    control_point1 = args[j], args[j + 1]
+                    control_point2 = args[j + 2], args[j + 3]
+                    end_point = args[j + 4], args[j + 5]
+                    transformed_points.extend([apply_matrix(matrix, control_point1),
+                                               apply_matrix(matrix, control_point2),
+                                               apply_matrix(matrix, end_point)])
+            elif command == 'V':
+                # Vertical Line
+                current_point = current_point[0], args[0]
+                transformed_points.append(apply_matrix(matrix, current_point))
+            elif command == 'H':
+                # Horizontal Line
+                current_point = args[0], current_point[1]
+                transformed_points.append(apply_matrix(matrix, current_point))
+            # Add other command types as needed
+
+    return transformed_points
+
+# Find all path elements in the SVG file
+path_elements = root.findall('.//{http://www.w3.org/2000/svg}path')
+
+# Loop through each path and parse the transformed coordinates
+for path_element in path_elements:
+    transformed_points = parse_path(path_element)
+    print("Transformed Points:", transformed_points)
+
+#####################################################################
