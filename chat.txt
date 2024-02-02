@@ -96,3 +96,49 @@ for path_element in path_elements:
     print("Transformed Points:", transformed_points)
 
 #####################################################################
+
+import xml.etree.ElementTree as ET
+
+def merge_text_to_words(svg_file_path, output_svg_file_path, proximity_threshold=5):
+    tree = ET.parse(svg_file_path)
+    root = tree.getroot()
+
+    # Dictionary to store words and their corresponding text elements
+    words = {}
+
+    # Iterate through <text> elements in the SVG
+    for text_element in root.iter('text'):
+        x = float(text_element.attrib.get('x', 0))
+        y = float(text_element.attrib.get('y', 0))
+
+        # Check if there is a nearby word based on proximity threshold
+        found_word = False
+        for key, (word_x, word_y) in words.items():
+            if abs(x - word_x) < proximity_threshold and abs(y - word_y) < proximity_threshold:
+                # Concatenate the text content to the existing word
+                words[key] = (word_x, word_y, text_element.text if text_element.text else '')
+                found_word = True
+                break
+
+        if not found_word:
+            # Create a new word entry
+            words[len(words) + 1] = (x, y, text_element.text if text_element.text else '')
+
+        # Remove the current <text> element from the SVG
+        root.remove(text_element)
+
+    # Create new <text> elements for the merged words
+    for _, (word_x, word_y, word_content) in words.items():
+        new_text = ET.Element('text', {'x': str(word_x), 'y': str(word_y)})
+        new_text.text = word_content
+        root.append(new_text)
+
+    # Save the modified SVG to a new file
+    tree.write(output_svg_file_path)
+
+# Example usage
+input_svg_file = 'input.svg'
+output_svg_file = 'output.svg'
+merge_text_to_words(input_svg_file, output_svg_file)
+
+#####################################################################
