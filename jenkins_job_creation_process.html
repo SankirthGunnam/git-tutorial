@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenkins Job Creation Process</title>
+</head>
+<body>
+
+<h1>Jenkins Job Creation Process</h1>
+
+<div>
+    <h2>1. Job Name and Type Selection</h2>
+    <p><strong>Job Name:</strong> MyFirstJob</p>
+    <p><strong>Job Type:</strong> Freestyle project</p>
+    <p><strong>Description:</strong> Select an appropriate name for your job and choose the desired job type based on
+        the nature of your project (e.g., Freestyle project, Pipeline, Multibranch Pipeline, etc.).</p>
+</div>
+
+<div>
+    <h2>2. Source Code Management (SCM) Configuration</h2>
+    <p><strong>SCM Type:</strong> Perforce</p>
+    <p><strong>Server Address:</strong> perforce.example.com:1666</p>
+    <p><strong>Workspace Name:</strong> MyPerforceWorkspace</p>
+    <p><strong>Description:</strong> Configure the source code management settings with Perforce by specifying the
+        server address, workspace name, and other relevant details.</p>
+</div>
+<div>
+    <h2>3. Build Triggers</h2>
+    <p><strong>Trigger Type:</strong> Poll SCM</p>
+    <p><strong>Trigger Settings:</strong> Every 5 minutes</p>
+    <p><strong>Description:</strong> Define build triggers to automate job execution based on events such as SCM
+        changes, timed triggers, webhook triggers, or manual triggers.</p>
+</div>
+<div>
+    <h2>4. Build Environment Configuration</h2>
+    <p><strong>Build Tools:</strong> Maven</p>
+    <p><strong>Environment Variables:</strong> JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64</p>
+    <p><strong>Description:</strong> Configure the build environment by specifying build tools, setting environment
+        variables, defining build parameters, and preparing the workspace for build execution.</p>
+</div>
+<div>
+    <h2>5. Build Steps and Post-Build Actions</h2>
+    <p><strong>Build Steps:</strong>
+    <ul>
+        <li>Execute shell script: mvn clean install</li>
+        <li>Archive artifacts: target/*.jar</li>
+    </ul>
+    </p>
+    <p><strong>Post-Build Actions:</strong>
+    <ul>
+        <li>Send build status notifications via email</li>
+    </ul>
+    </p>
+    <p><strong>Description:</strong> Define build steps to execute tasks such as compiling code, running tests,
+        generating reports, and packaging artifacts. Configure post-build actions for notifications, deployments, and
+        result reporting.</p>
+</div>
+<div>
+    <h2>6. Additional Configuration Options</h2>
+    <p><strong>Advanced Settings:</strong>
+    <ul>
+        <li>Set quiet period: 30 seconds</li>
+        <li>Use custom workspace: /var/lib/jenkins/workspace/myjob</li>
+    </ul>
+    </p>
+    <p><strong>Permissions and Access:</strong>
+    <ul>
+        <li>Allow all users to build</li>
+        <li>Restrict project-based permissions</li>
+    </ul>
+    </p>
+    <p><strong>Description:</strong> Explore advanced configuration options for customizing build behavior, defining
+        build triggers, setting up notifications, managing credentials, and controlling job permissions.</p>
+</div>
+<div>
+    <h2>7. Review and Validation</h2>
+    <p><strong>Configuration Review:</strong>
+    <ul>
+        <li>Double-check SCM settings</li>
+        <li>Verify trigger configurations</li>
+    </ul>
+    </p>
+    <p><strong>Validation and Testing:</strong>
+    <ul>
+        <li>Run test builds on different branches</li>
+        <li>Check console output for errors</li>
+    </ul>
+    </p>
+    <p><strong>Description:</strong> Review the job configuration to ensure all settings are correct. Validate the job
+        by running test builds, verifying triggers, and testing post-build actions.</p>
+</div>
+<div>
+    <h2>8. Save and Execute</h2>
+    <p><strong>Save Job Configuration:</strong> Click "Save" to apply changes</p>
+    <p><strong>Execute Initial Build:</strong> Trigger a manual build to test job functionality</p>
+    <p><strong>Description:</strong> Save the job configuration to apply changes. Execute the initial build to test job
+        functionality, validate build results, and monitor job execution.</p>
+</div>
+
+<!-- Other sections omitted for brevity -->
+
+</body>
+</html>
