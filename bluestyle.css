@@ -6,3 +6,16 @@ h1 {
     color: navy;
     margin-left: 20px;
 }
+
+h2 {
+    color: green;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+div {
+    color: white;
+    background-color: cyan;
+}
